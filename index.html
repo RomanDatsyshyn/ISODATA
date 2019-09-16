@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <script src="1.js"></script>
+  <script src="d3.js"></script>
+  <link href="nv.d3.css" rel="stylesheet">
+  <script src="nv.d3.js"></script>
+
+</head>
+
+<script>
+  function getClusters() {
+    let clusters = [];
+    clusters.push(getPoints());
+    return clusters;
+  }
+
+  function getPoints() {
+    var points = [];
+    const reader = document.getElementById("text2").value;
+    var readerS = reader.split(",");
+    for (let i = 0; i < readerS.length; i++) {
+      points.push({
+        x: parseInt(readerS[i].split(":")[0]),
+        y: parseInt(readerS[i].split(":")[1])
+      });
+    }
+    return points;
+  }
+
+  function nuller() {
+    z = [];
+    d = [];
+    d2;
+    sg = [];
+    sgm = [];
+    k = 3;
+    qn = 1;
+    qs = 1;
+    qc = 3;
+    l = 1;
+    nc = 1;
+    iterCounter = 1;
+
+    document.getElementById("text1").value = "";
+  }
+</script>
+
+<body>
+  <div id="container">
+    <div class="input">
+      <form id="form">
+        <textarea id="text1" readonly></textarea>
+      </form>
+    </div>
+    <button id="start" onclick="nuller(),step4(getClusters(),getPoints()),conv()">START</button>
+    <textarea id="text2">4:4,4:3,3:3,2:2,2:3,-2:-4,-3:-5,-4:-5,-5:-5,-5:1,-5:0,-2:-5,-2:-6</textarea>
+  </div>
+
+  <div id="chart">
+    <svg></svg>
+  </div>
+
+  <script>
+    function graphica(clusters) {
+      var data = function (groups, points) {
+        var xr1 = clusters[0];
+        var xr2 = clusters[1];
+        var xr3 = clusters[2];
+        var xr4 = [];
+        if (clusters.length == 4) {
+          xr4 = clusters[3];
+        }
+        var centers = z;
+        var data = [
+
+            {
+              key: "Cluster 1",
+              values: xr1,
+              color: "#ff0000"
+            },
+            {
+              key: "Cluster 2",
+              values: xr2,
+              color: "#0011ff"
+            },
+            {
+              key: "Cluster 3",
+              values: xr3,
+              color: "#007005"
+            },
+            {
+              key: "Cluster 4",
+              values: xr4,
+              color: "#ffff00"
+            },
+            {
+              key: "Center",
+              values: centers,
+              color: "#fffff",
+            },
+            {
+              values: [{
+                x: 10,
+                y: 10,
+                size: 0.1
+              }, {
+                x: -10,
+                y: -10,
+                size: 0.1
+              }],
+              color: "#fff",
+            }
+          ],
+          shapes = ['circle', 'cross', 'triangle-up', 'triangle-down', 'diamond', 'square'],
+          random = d3.random.normal();
+        return data;
+      };
+      nv.addGraph(function () {
+        var chart = nv.models.scatterChart()
+          .showDistX(false)
+          .showDistY(false);
+
+        chart.xAxis.tickFormat(d3.format('d'));
+        chart.yAxis.tickFormat(d3.format('d'));
+
+        d3.select('#chart svg')
+          .datum(data(3, 4))
+          .transition().duration(500)
+          .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+      });
+    }
+  </script>
+
+
+</body>
+
+</html>
